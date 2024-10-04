@@ -1,9 +1,9 @@
-import Image from "next/image";
+import { ChartComponent } from "@/components/chart-component";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Hello World</h1>
-    </div>
+    <main className="flex min-h-screen flex-col p-12">
+      <ChartComponent />
+    </main>
   );
 }
