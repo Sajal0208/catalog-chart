@@ -21,25 +21,20 @@ export async function processDataForInterval(
   };
 
   const days = intervalMap[interval] || 1;
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-  const intervalInMs = days * millisecondsPerDay;
+  const result: DataPoint[] = [];
 
   if (days === 1) {
-    return data.reverse();
-  }
-
-  const result: DataPoint[] = [];
-  let lastTimestamp =
-    new Date(data[data.length - 1].x).getTime() + intervalInMs;
-
-  for (let i = data.length - 1; i >= 0; i--) {
-    if (new Date(data[i].x).getTime() + intervalInMs <= lastTimestamp) {
-      console.log("pushing data point", data[i]);
+    for (let i = data.length - 1; i >= 0; i -= days) {
       result.push(data[i]);
-      lastTimestamp = new Date(data[i].x).getTime();
     }
+
+    return result;
   }
 
-  console.log("interval, result, ", interval, result);
+  for (let i = data.length - 1; i >= 0; i -= days) {
+    result.push(data[i]);
+  }
+
+  console.log("interval, result length, ", interval, result.length);
   return result;
 }
