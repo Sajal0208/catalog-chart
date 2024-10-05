@@ -8,6 +8,7 @@ import { CurrentPrice } from "./current-price";
 import { ChartMenuBar } from "./chart-menu-bar";
 import { ChartActionBar } from "./chart-action-bar";
 import Chart from "./chart";
+import { Dialog, DialogContent } from "./modal";
 
 export enum Tab {
   Summary = "Summary",
@@ -53,6 +54,13 @@ export function ChartComponent() {
     setCrypto(crypto);
   }
 
+  const renderChart = (width: number, height: number) => {
+    if (tab === Tab.Chart && !isLoading) {
+      return <Chart data={data} width={width} height={height} />;
+    }
+    return null;
+  };
+
   return (
     <div className='flex flex-col items-start justify-center p-4 w-full h-full gap-8'>
       <div className="flex items-center space-x-2">
@@ -78,10 +86,19 @@ export function ChartComponent() {
         <ChartActionBar fullScreen={fullscreen} setFullScreen={setFullscreen} timeInterval={timeInterval} setTimeInterval={setTimeInterval} />
       </div>
       <div className="w-full">
-        {tab === Tab.Chart && !isLoading && <Chart data={data} />}
-
+        {fullscreen ? (
+          <Dialog open={fullscreen} onOpenChange={setFullscreen}>
+            <DialogContent className="max-w-[90vw] max-h-[90vh] flex flex-col items-center justify-center w-full h-full gap-4 bg-white">
+              <div className="w-full flex justify-start">
+                <ChartActionBar fullScreen={fullscreen} setFullScreen={setFullscreen} timeInterval={timeInterval} setTimeInterval={setTimeInterval} />
+              </div>
+              {renderChart(1080, 720)}
+            </DialogContent>
+          </Dialog>
+        ) : (
+          renderChart(720, 400)
+        )}
       </div>
     </div>
   )
 }
-

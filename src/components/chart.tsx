@@ -2,9 +2,7 @@
 import { formatText } from "@/utils/format-text";
 import { useState } from "react";
 
-export default function Chart({ data }: { data: any[] }) {
-  const width = 720;
-  const height = 400;
+export default function Chart({ data, width, height }: { data: any[], width: number, height: number }) {
   const padding = 0;
   const chartWidth = width - 2 * padding;
   const chartHeight = height - 2 * padding;
