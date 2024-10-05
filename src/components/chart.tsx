@@ -24,7 +24,7 @@ export default function Chart({ data, width, height }: { data: any[], width: num
 
   const verticalLines = 7;
 
-  const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number; volume: number } | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number; volume: number; date: string } | null>(null);
   const currentPrice = data[data.length - 1].Price;
   const currentPriceY = yScale(currentPrice);
 
@@ -80,7 +80,7 @@ export default function Chart({ data, width, height }: { data: any[], width: num
               height={volumeHeight}
               fill="#E6E8EB"
               opacity={2}
-              onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: chartHeight - volumeHeight, volume: point.Vol })}
+              onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: chartHeight - volumeHeight, volume: point.Vol, date: point.Date })}
               onMouseLeave={() => setHoveredPoint(null)}
               cursor="pointer"
             />
@@ -97,7 +97,7 @@ export default function Chart({ data, width, height }: { data: any[], width: num
           return (
             <>
               <circle
-                onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: yScale(point.Price), volume: point.Vol })}
+                onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: yScale(point.Price), volume: point.Vol, date: point.Date })}
                 onMouseLeave={() => setHoveredPoint(null)}
                 key={index}
                 cx={xScale(index)}
@@ -162,18 +162,42 @@ export default function Chart({ data, width, height }: { data: any[], width: num
         }}>
           {currentPrice.toFixed(2)}
         </div>
+        {hoveredPoint && hoveredPoint.volume && (
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              backgroundColor: '#1A243A',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              fontWeight: 400
+            }}
+            className="text-sm text-gray-500 whitespace-nowrap"
+          >
+            Trading Volume: {formatText(hoveredPoint.volume.toString())}
+          </div>
+        )}
+        {hoveredPoint && hoveredPoint.date && (
+          <div
+            style={{
+              position: 'absolute',
+              top: height - padding,
+              left: 0,
+              backgroundColor: '#1A243A',
+              color: 'white',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              fontWeight: 400
+            }}
+            className="text-sm text-gray-500 whitespace-nowrap"
+          >
+            Date: {hoveredPoint.date}
+          </div>
+        )}
       </div>
-      {hoveredPoint && hoveredPoint.volume && (
-        <text
-          x={hoveredPoint.x}
-          y={hoveredPoint.y - 5}
-          textAnchor="middle"
-          fill="#333"
-          fontSize="12"
-        >
-          {formatText(hoveredPoint.volume.toString())}
-        </text>
-      )}
+
     </div>
   );
 }
