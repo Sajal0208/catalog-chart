@@ -1,6 +1,7 @@
 'use client'
 import { formatText } from "@/utils/format-text";
 import { useState } from "react";
+import { ChartStats } from "./chart-stats";
 
 export default function Chart({ data, width, height }: { data: any[], width: number, height: number }) {
   const padding = 0;
@@ -28,6 +29,21 @@ export default function Chart({ data, width, height }: { data: any[], width: num
   const currentPrice = data[data.length - 1].Price;
   const currentPriceY = yScale(currentPrice);
 
+  const handleMouseMove = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const index = Math.round((x - padding) / (chartWidth / (data.length - 1)));
+    const point = data[index];
+    if (point) {
+      setHoveredPoint({
+        x: xScale(index),
+        y: yScale(point.Price),
+        volume: point.Vol,
+        date: point.Date,
+      });
+    }
+  };
+
   return (
     <div
       className='flex items-start justify-start'
@@ -42,6 +58,8 @@ export default function Chart({ data, width, height }: { data: any[], width: num
           borderColor: 'linear-gradient(180deg, #E8E7FF 0%, rgba(255, 255, 255, 0) 100%)',
         }}
         className='border-[1px] border-t-0'
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHoveredPoint(null)}
       >
         <defs>
           <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -80,8 +98,6 @@ export default function Chart({ data, width, height }: { data: any[], width: num
               height={volumeHeight}
               fill="#E6E8EB"
               opacity={2}
-              onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: chartHeight - volumeHeight, volume: point.Vol, date: point.Date })}
-              onMouseLeave={() => setHoveredPoint(null)}
               cursor="pointer"
             />
           );
@@ -93,23 +109,17 @@ export default function Chart({ data, width, height }: { data: any[], width: num
           strokeWidth="2"
         />
 
-        {data.map((point, index) => {
-          return (
-            <>
-              <circle
-                onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: yScale(point.Price), volume: point.Vol, date: point.Date })}
-                onMouseLeave={() => setHoveredPoint(null)}
-                key={index}
-                cx={xScale(index)}
-                cy={yScale(point.Price)}
-                r="1"
-                fill="#4B40EE"
-                cursor="pointer"
-                z="100"
-              />
-            </>
-          )
-        })}
+        {data.map((point, index) => (
+          <circle
+            key={index}
+            cx={xScale(index)}
+            cy={yScale(point.Price)}
+            r="1"
+            fill="#4B40EE"
+            cursor="pointer"
+            z="100"
+          />
+        ))}
         {hoveredPoint && (
           <>
             <line
@@ -133,71 +143,15 @@ export default function Chart({ data, width, height }: { data: any[], width: num
           </>
         )}
       </svg>
-      <div className="relative">
-        {
-          hoveredPoint && (
-            <div style={{
-              position: 'absolute',
-              top: hoveredPoint.y,
-              transform: 'translate(-0%, -50%)',
-              backgroundColor: '#1A243A',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '5px',
-              fontWeight: 400
-            }}>
-              {data[Math.round((hoveredPoint.x - padding) / (chartWidth / (data.length - 1)))].Price.toFixed(2)}
-            </div>
-          )
-        }
-        <div style={{
-          position: 'absolute',
-          top: currentPriceY,
-          transform: 'translate(-0%, -50%)',
-          backgroundColor: '#4B40EE',
-          padding: '5px 10px',
-          borderRadius: '5px',
-          color: 'white',
-          fontWeight: 400,
-        }}>
-          {currentPrice.toFixed(2)}
-        </div>
-        {hoveredPoint && hoveredPoint.volume && (
-          <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              backgroundColor: '#1A243A',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '5px',
-              fontWeight: 400
-            }}
-            className="text-sm text-gray-500 whitespace-nowrap"
-          >
-            Trading Volume: {formatText(hoveredPoint.volume.toString())}
-          </div>
-        )}
-        {hoveredPoint && hoveredPoint.date && (
-          <div
-            style={{
-              position: 'absolute',
-              top: height - padding,
-              left: 0,
-              backgroundColor: '#1A243A',
-              color: 'white',
-              padding: '5px 10px',
-              borderRadius: '5px',
-              fontWeight: 400
-            }}
-            className="text-sm text-gray-500 whitespace-nowrap"
-          >
-            Date: {hoveredPoint.date}
-          </div>
-        )}
-      </div>
-
+      <ChartStats
+        hoveredPoint={hoveredPoint}
+        currentPrice={currentPrice}
+        currentPriceY={currentPriceY}
+        data={data}
+        padding={padding}
+        chartWidth={chartWidth}
+        height={height}
+      />
     </div>
   );
 }
