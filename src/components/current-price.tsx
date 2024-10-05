@@ -9,7 +9,7 @@ export const CurrentPrice = ({ price, percentageChange, priceChange }: { price: 
       </div>
       <div className="flex flex-row items-start justify-center gap-1">
         <span className={`text-lg font-medium ${priceChange >= 0 ? 'text-[#67BF6B]' : 'text-[#EA3943]'}`}>
-          {priceChange >= 0 ? '+' : '-'} {formatText(Math.abs(priceChange).toFixed(2))}
+          {priceChange >= 0 ? '+' : '-'} {formatText(Math.abs(priceChange).toFixed(2).toString())}
         </span>
         <span className={`text-lg font-medium ${priceChange >= 0 ? 'text-[#67BF6B]' : 'text-[#EA3943]'}`}>
           ({priceChange >= 0 ? '+' : '-'}{Math.abs(percentageChange).toFixed(2)}%)

@@ -9,7 +9,7 @@ export const ChartMenuBar = ({ activeTab, setActiveTab }: { activeTab: Tab, setA
       {tabs.map((tab) => (
         <button
           key={tab}
-          className={`px-4 py-2 text-sm font-medium ${tab === activeTab ? 'text-[#1A243A] border-b-2 border-[#4B40EE]' : 'text-[#6F7177] hover:text-[#4B40EE]'}`}
+          className={`px-4 py-4 text-sm font-medium ${tab === activeTab ? 'text-[#1A243A] border-b-2 border-[#4B40EE]' : 'text-[#6F7177] hover:text-[#4B40EE]'}`}
           onClick={() => {
             setActiveTab(tab as Tab);
           }}
