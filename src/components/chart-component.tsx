@@ -32,9 +32,6 @@ export enum Crypto {
   Ethereum = "ethereum",
 }
 
-// #4B40EE
-// #6F7177
-
 export function ChartComponent() {
   const cryptos = Object.values(Crypto);
   const [crypto, setCrypto] = useState<Crypto>(Crypto.Bitcoin);

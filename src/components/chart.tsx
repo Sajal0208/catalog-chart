@@ -1,4 +1,5 @@
 'use client'
+import { formatText } from "@/utils/format-text";
 import { useState } from "react";
 
 export default function Chart({ data }: { data: any[] }) {
@@ -11,9 +12,13 @@ export default function Chart({ data }: { data: any[] }) {
   const maxY = Math.max(...data.map((point) => point.Price));
   const minY = 0;
   const yRange = maxY * 1.1 - minY;
+  const volumeBarHeight = 40;
+  const gapBetweenChartAndVolume = 10;
+  const chartHeightWithVolume = chartHeight - volumeBarHeight - gapBetweenChartAndVolume;
 
   const xScale = (index: number) => (index / (data.length - 1)) * chartWidth + padding;
-  const yScale = (value: number) => chartHeight - ((value - minY) / yRange) * chartHeight + padding;
+  const maxVolume = Math.max(...data.map((point) => point.Vol));
+  const yScale = (value: number) => chartHeightWithVolume - ((value - minY) / yRange) * chartHeightWithVolume + padding;
 
   const linePath = data.map((point, index) =>
     `${index === 0 ? 'M' : 'L'} ${xScale(index)} ${yScale(point.Price)}`
@@ -21,7 +26,7 @@ export default function Chart({ data }: { data: any[] }) {
 
   const verticalLines = 7;
 
-  const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number } | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<{ x: number; y: number; volume: number } | null>(null);
   const currentPrice = data[data.length - 1].Price;
   const currentPriceY = yScale(currentPrice);
 
@@ -41,7 +46,6 @@ export default function Chart({ data }: { data: any[] }) {
         className='border-[1px] border-t-0'
       >
         <defs>
-
           <linearGradient id="pathGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="100%" stopColor="#E8E7FF" stopOpacity="0.3" />
             <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.1" />
@@ -65,8 +69,27 @@ export default function Chart({ data }: { data: any[] }) {
             strokeWidth="1"
           />
         ))}
+
+        {data.map((point, index) => {
+          const barWidth = chartWidth / data.length;
+          const volumeHeight = 5 + ((point.Vol / maxVolume) * (volumeBarHeight - 5));
+          return (
+            <rect
+              key={`volume-${index}`}
+              x={xScale(index) - barWidth / 2}
+              y={chartHeight - volumeHeight}
+              width={barWidth}
+              height={volumeHeight}
+              fill="#E6E8EB"
+              opacity={2}
+              onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: chartHeight - volumeHeight, volume: point.Vol })}
+              onMouseLeave={() => setHoveredPoint(null)}
+              cursor="pointer"
+            />
+          );
+        })}
         <path
-          d={`${linePath} L ${xScale(data.length - 1)} ${height - padding} L ${padding} ${height - padding} Z`}
+          d={`${linePath} L ${xScale(data.length - 1)} ${chartHeightWithVolume} L ${padding} ${chartHeightWithVolume} Z`}
           fill="url(#pathGradient)"
           stroke="#4B40EE"
           strokeWidth="2"
@@ -74,17 +97,19 @@ export default function Chart({ data }: { data: any[] }) {
 
         {data.map((point, index) => {
           return (
-            <circle
-              onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: yScale(point.Price) })}
-              onMouseLeave={() => setHoveredPoint(null)}
-              key={index}
-              cx={xScale(index)}
-              cy={yScale(point.Price)}
-              r="1"
-              fill="#4B40EE"
-              cursor="pointer"
-              z="100"
-            />
+            <>
+              <circle
+                onMouseEnter={() => setHoveredPoint({ x: xScale(index), y: yScale(point.Price), volume: point.Vol })}
+                onMouseLeave={() => setHoveredPoint(null)}
+                key={index}
+                cx={xScale(index)}
+                cy={yScale(point.Price)}
+                r="1"
+                fill="#4B40EE"
+                cursor="pointer"
+                z="100"
+              />
+            </>
           )
         })}
         {hoveredPoint && (
@@ -140,6 +165,17 @@ export default function Chart({ data }: { data: any[] }) {
           {currentPrice.toFixed(2)}
         </div>
       </div>
-    </div >
+      {hoveredPoint && hoveredPoint.volume && (
+        <text
+          x={hoveredPoint.x}
+          y={hoveredPoint.y - 5}
+          textAnchor="middle"
+          fill="#333"
+          fontSize="12"
+        >
+          {formatText(hoveredPoint.volume.toString())}
+        </text>
+      )}
+    </div>
   );
 }

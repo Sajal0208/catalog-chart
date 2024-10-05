@@ -48,8 +48,20 @@ export async function processDataForInterval(
         const vol =
           typeof data[i]["Vol."] === "number"
             ? data[i]["Vol."]
-            : parseFloat(data[i]["Vol."].replace(/,/g, "").replace("K", "")) *
-              1000;
+            : parseFloat(
+                data[i]["Vol."]
+                  .replace(/,/g, "")
+                  .replace("K", "")
+                  .replace("M", "")
+                  .replace("B", "")
+              ) *
+              (data[i]["Vol."].includes("K")
+                ? 1000
+                : data[i]["Vol."].includes("M")
+                ? 1000000
+                : data[i]["Vol."].includes("B")
+                ? 1000000000
+                : 1);
         const change =
           typeof data[i]["Change %"] === "number"
             ? data[i]["Change %"]
@@ -88,8 +100,20 @@ export async function processDataForInterval(
       const vol =
         typeof data[i]["Vol."] === "number"
           ? data[i]["Vol."]
-          : parseFloat(data[i]["Vol."].replace(/,/g, "").replace("K", "")) *
-            1000;
+          : parseFloat(
+              data[i]["Vol."]
+                .replace(/,/g, "")
+                .replace("K", "")
+                .replace("M", "")
+                .replace("B", "")
+            ) *
+            (data[i]["Vol."].includes("K")
+              ? 1000
+              : data[i]["Vol."].includes("M")
+              ? 1000000
+              : data[i]["Vol."].includes("B")
+              ? 1000000000
+              : 1);
       const change =
         typeof data[i]["Change %"] === "number"
           ? data[i]["Change %"]
