@@ -33,6 +33,7 @@ export enum Crypto {
 }
 
 export function ChartComponent() {
+  const [fullscreen, setFullscreen] = useState(false);
   const cryptos = Object.values(Crypto);
   const [crypto, setCrypto] = useState<Crypto>(Crypto.Bitcoin);
   const [tab, setTab] = useState<Tab>(Tab.Chart);
@@ -74,10 +75,11 @@ export function ChartComponent() {
         <ChartMenuBar activeTab={tab} setActiveTab={handleTabChange} />
       </div>
       <div className="w-full">
-        <ChartActionBar timeInterval={timeInterval} setTimeInterval={setTimeInterval} />
+        <ChartActionBar fullScreen={fullscreen} setFullScreen={setFullscreen} timeInterval={timeInterval} setTimeInterval={setTimeInterval} />
       </div>
       <div className="w-full">
         {tab === Tab.Chart && !isLoading && <Chart data={data} />}
+
       </div>
     </div>
   )

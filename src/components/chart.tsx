@@ -89,8 +89,8 @@ export default function Chart({ data }: { data: any[] }) {
           );
         })}
         <path
-          d={`${linePath} L ${xScale(data.length - 1)} ${chartHeightWithVolume} L ${padding} ${chartHeightWithVolume} Z`}
-          fill="url(#pathGradient)"
+          d={linePath}
+          fill="none"
           stroke="#4B40EE"
           strokeWidth="2"
         />

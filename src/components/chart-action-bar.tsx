@@ -4,14 +4,14 @@ import { MdOpenInFull } from "react-icons/md";
 import { MdCloseFullscreen } from "react-icons/md";
 import { MdAddCircleOutline } from "react-icons/md";
 
-export const ChartActionBar = ({ timeInterval, setTimeInterval }: { timeInterval: TimeInterval, setTimeInterval: (interval: TimeInterval) => void }) => {
+export const ChartActionBar = ({ fullScreen, setFullScreen, timeInterval, setTimeInterval }: { fullScreen: boolean, setFullScreen: (fullScreen: boolean) => void, timeInterval: TimeInterval, setTimeInterval: (interval: TimeInterval) => void }) => {
   const timeIntervals = Object.values(TimeInterval);
 
   return (
     <div className="flex items-center space-x-2 gap-16">
       <div className="flex items-center gap-2">
-        <button className="p-2 rounded-md hover:bg-gray-100 text-[#6F7177] flex items-center gap-2 ">
-          <MdOpenInFull /> Fullscreen
+        <button onClick={() => setFullScreen(!fullScreen)} className="p-2 rounded-md hover:bg-gray-100 text-[#6F7177] flex items-center gap-2 ">
+          {fullScreen ? <MdCloseFullscreen /> : <MdOpenInFull />} Fullscreen
         </button>
         <button className="p-2 rounded-md hover:bg-gray-100 text-[#6F7177] flex items-center gap-2 ">
           <MdAddCircleOutline /> Compare
