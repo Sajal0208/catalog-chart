@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Crypto Chart Application
+
+This is a Next.js project that displays cryptocurrency price charts for Bitcoin and Ethereum. The application allows users to view historical price data, switch between different cryptocurrencies, and adjust the time interval for the displayed data.
+
+## Features
+
+- Interactive cryptocurrency price charts
+- Support for Bitcoin and Ethereum
+- Customizable time intervals (1d, 3d, 7d, 1m, 6m, 1y, max)
+- Responsive design with fullscreen mode
+- Real-time price updates and percentage changes
+
+## Technologies Used
+
+- Next.js 14
+- React 18
+- TypeScript
+- Tailwind CSS
+
+## Custom Chart Implementation
+
+One of the unique aspects of this project is that the charts are implemented without relying on any third-party charting libraries. The custom chart component is built from scratch using SVG and React, providing full control over the chart's appearance and behavior.
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Run the development server:
+   ```
+   npm run dev
+   ```
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The main components of the project are:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `ChartComponent`: The main container for the chart and controls
+- `Chart`: The custom SVG-based chart implementation
+- `ChartMenuBar`: Navigation for different chart views
+- `ChartActionBar`: Controls for fullscreen and time interval selection
+- `CurrentPrice`: Displays the current price and price changes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Data Processing
 
-## Learn More
+The project includes custom data processing utilities to handle different time intervals and format the chart data appropriately.
 
-To learn more about Next.js, take a look at the following resources:
+## Styling
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project uses Tailwind CSS for styling, providing a clean and responsive design.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project can be easily deployed on platforms like Vercel or Netlify.
